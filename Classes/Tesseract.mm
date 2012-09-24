@@ -1,9 +1,10 @@
 //
-//  Tesseract.m
-//  TesseractTest
+//  Tesseract.mm
+//  Tesseract
 //
 //  Created by Loïs Di Qual on 24/09/12.
-//  Copyright (c) 2012 Loïs Di Qual. All rights reserved.
+//  Copyright (c) 2012 Loïs Di Qual.
+//  Under MIT License. See 'LICENCE' for more informations.
 //
 
 #import "Tesseract.h"
