@@ -13,7 +13,7 @@ There is no support for armv6, so it won't work with iPhone 1st Gen and iPhone 3
 Usage
 -----
 
-You can use the raw library with regular C++ code. An objective-C wrapper is coming soon.
+You might want to use this [tesseract-ios](https://github.com/ldiqual/tesseract-ios) to include Tesseract in your iOS project. For a more advanced usage, you can use the raw library with regular C++ code.
 
 Don't forget to rename your implementation classes with `.mm` instead of `.m` as it uses C++ code.
 
