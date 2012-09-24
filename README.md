@@ -7,6 +7,8 @@ About
 
 Tesseract-ios is an Objective-C wrapper for [Tesseract OCR](http://code.google.com/p/tesseract-ocr/).
 
+This project couldn't exist without the [Ângelo Suzuki's blog post](http://tinsuke.wordpress.com/2011/11/01/how-to-compile-and-use-tesseract-3-01-on-ios-sdk-5/). A lot of code came from his article.
+
 
 Requirements
 ------------
