@@ -41,7 +41,7 @@ Code Sample
     #import "Tesseract.h"
     
     Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"eng"];
-    [tesseract setVariableValue:@"tessedit_char_whitelist" forKey:@"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+    [tesseract setVariableValue:@"0123456789" forKey:@"tessedit_char_whitelist"];
     [tesseract setImage:[UIImage imageNamed:@"image_sample.jpg"]];
     [tesseract recognize];
     
