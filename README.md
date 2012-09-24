@@ -15,6 +15,14 @@ Requirements
  - Tesseract and Leptonica libraries from the [tesseract-ios-lib](https://github.com/ldiqual/tesseract-ios-lib) repo.
  
 
+Installation
+------------
+
+ - Download [tesseract-ios-lib](https://github.com/ldiqual/tesseract-ios-lib) and put it somewhere in your project.
+ - Put the `Classes` content (from this repo) somewhere in your project.
+ - Go to your project settings, and ensure that `C++ Standard Library => Compiler Default`.
+ 
+
 Usage
 -----
 
