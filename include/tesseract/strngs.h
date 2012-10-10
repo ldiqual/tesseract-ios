@@ -20,10 +20,10 @@
 #ifndef           STRNGS_H
 #define           STRNGS_H
 
+#include          <stdio.h>
 #include          <string.h>
 #include          "platform.h"
 #include          "memry.h"
-#include          "serialis.h"
 
 // STRING_IS_PROTECTED means that  string[index] = X is invalid
 // because you have to go through strings interface to modify it.
@@ -55,6 +55,11 @@ class TESS_API STRING
     inT32 length() const;
     inT32 size() const { return length(); }
     const char *string() const;
+
+    inline char* strdup() const {
+     inT32 len = length() + 1;
+     return strncpy(new char[len], GetCStr(), len);
+    }
 
 #if STRING_IS_PROTECTED
     const char &operator[] (inT32 index) const;
