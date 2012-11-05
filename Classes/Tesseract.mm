@@ -59,7 +59,7 @@ namespace tesseract {
     
     // Copy data in Doc Directory
     if (![fileManager fileExistsAtPath:dataPath]) {
-        NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
+        NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
         NSString *tessdataPath = [bundlePath stringByAppendingPathComponent:_dataPath];
         if (tessdataPath) {
             [fileManager copyItemAtPath:tessdataPath toPath:dataPath error:nil];
