@@ -26,6 +26,10 @@ namespace tesseract {
 
 @implementation Tesseract
 
++ (NSString *)version {
+    return [NSString stringWithFormat:@"%s", tesseract::TessBaseAPI::Version()];
+}
+
 - (id)initWithDataPath:(NSString *)dataPath language:(NSString *)language {
     self = [super init];
     if (self) {
