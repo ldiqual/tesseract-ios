@@ -15,6 +15,8 @@
     NSMutableDictionary* _variables;
 }
 
++ (NSString *)version;
+
 - (id)initWithDataPath:(NSString *)dataPath language:(NSString *)language;
 - (void)setVariableValue:(NSString *)value forKey:(NSString *)key;
 - (void)setImage:(UIImage *)image;
