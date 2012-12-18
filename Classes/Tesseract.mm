@@ -66,6 +66,7 @@ namespace tesseract {
         NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
         NSString *tessdataPath = [bundlePath stringByAppendingPathComponent:_dataPath];
         if (tessdataPath) {
+            [fileManager createDirectoryAtPath:documentPath withIntermediateDirectories:YES attributes:nil error:NULL];
             [fileManager copyItemAtPath:tessdataPath toPath:dataPath error:nil];
         }
     }
