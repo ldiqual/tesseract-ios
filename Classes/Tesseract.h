@@ -23,5 +23,6 @@
 - (BOOL)setLanguage:(NSString *)language;
 - (BOOL)recognize;
 - (NSString *)recognizedText;
+- (void)clear;
 
 @end
