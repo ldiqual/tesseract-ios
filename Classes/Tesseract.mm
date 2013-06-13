@@ -116,6 +116,12 @@ namespace tesseract {
     return [NSString stringWithUTF8String:utf8Text];
 }
 
+- (void)clear
+{
+    _tesseract->Clear();
+    _tesseract->End();
+}
+
 - (void)setImage:(UIImage *)image
 {
     free(_pixels);
