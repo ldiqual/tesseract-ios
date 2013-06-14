@@ -35,6 +35,7 @@ Here is the default workflow to extract text from an image:
  - Set the image to analyze
  - Start recognition
  - Get recognized text
+ - Clear
  
  
 Code Sample
@@ -48,6 +49,7 @@ Code Sample
     [tesseract recognize];
     
     NSLog(@"%@", [tesseract recognizedText]);
+    [tesseract clear];
  
  
 Method reference
@@ -97,3 +99,8 @@ Start text recognition. You might want to launch this process in background with
 
 Get the text extracted from the image.
 
+### -clear ###
+
+`- (void) clear`
+
+Clears Tesseract object after text has been recognized from image. Preventing memory leaks.
