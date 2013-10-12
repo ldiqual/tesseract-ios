@@ -118,6 +118,7 @@ namespace tesseract {
 
 - (void)clear
 {
+    free(_pixels);
     _tesseract->Clear();
     _tesseract->End();
 }
