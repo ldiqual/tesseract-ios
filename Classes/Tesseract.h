@@ -9,7 +9,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Tesseract : NSObject {    
+extern NSString * const OcrEngineModeTesseractOnly;
+extern NSString * const OcrEngineModeCubeOnly;
+extern NSString * const OcrEngineModeTesseractCubeCombined;
+extern NSString * const OcrEngineModeDefault;
+
+@interface Tesseract : NSObject {
     NSString* _dataPath;
     NSString* _language;
     NSMutableDictionary* _variables;
@@ -17,6 +22,12 @@
 
 + (NSString *)version;
 
+- (id)initWithDataPath:(NSString *)dataPath
+              language:(NSString *)language
+         ocrEngineMode:(NSString *)mode
+       configFilenames:(NSArray*)configFilenames
+             variables:(NSDictionary*)variables
+ setOnlyNonDebugParams:(BOOL)setOnlyNonDebugParams;
 - (id)initWithDataPath:(NSString *)dataPath language:(NSString *)language;
 - (void)setVariableValue:(NSString *)value forKey:(NSString *)key;
 - (void)setImage:(UIImage *)image;

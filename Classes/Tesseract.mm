@@ -13,6 +13,11 @@
 #import "environ.h"
 #import "pix.h"
 
+NSString * const OcrEngineModeTesseractOnly = @"OcrEngineModeTesseractOnly";
+NSString * const OcrEngineModeCubeOnly = @"OcrEngineModeCubeOnly";
+NSString * const OcrEngineModeTesseractCubeCombined = @"OcrEngineModeTesseractCubeCombined";
+NSString * const OcrEngineModeDefault = @"OcrEngineModeDefault";
+
 namespace tesseract {
     class TessBaseAPI;
 };
@@ -20,6 +25,10 @@ namespace tesseract {
 @interface Tesseract () {
     tesseract::TessBaseAPI* _tesseract;
     uint32_t* _pixels;
+    bool _setOnlyNonDebugParams;
+    tesseract::OcrEngineMode _ocrEngineMode;
+    
+    NSArray* _configFilenames;
 }
 
 @end
@@ -30,12 +39,44 @@ namespace tesseract {
     return [NSString stringWithFormat:@"%s", tesseract::TessBaseAPI::Version()];
 }
 
-- (id)initWithDataPath:(NSString *)dataPath language:(NSString *)language {
+- (id)initWithDataPath:(NSString *)dataPath
+              language:(NSString *)language
+         ocrEngineMode:(NSString *)mode
+       configFilenames:(NSArray*)configFilenames
+             variables:(NSDictionary*)variables
+ setOnlyNonDebugParams:(BOOL)setOnlyNonDebugParams {
     self = [super init];
     if (self) {
         _dataPath = dataPath;
         _language = language;
-        _variables = [[NSMutableDictionary alloc] init];
+        
+        if (mode) {
+            if ([mode isEqualToString:OcrEngineModeTesseractOnly]) {
+                _ocrEngineMode = tesseract::OEM_TESSERACT_ONLY;
+            } else if ([mode isEqualToString:OcrEngineModeCubeOnly]) {
+                _ocrEngineMode = tesseract::OEM_CUBE_ONLY;
+            } else if ([mode isEqualToString:OcrEngineModeTesseractCubeCombined]) {
+                _ocrEngineMode = tesseract::OEM_TESSERACT_CUBE_COMBINED;
+            } else {
+                _ocrEngineMode = tesseract::OEM_DEFAULT;
+            }
+        } else {
+            _ocrEngineMode = tesseract::OEM_DEFAULT;
+        }
+        
+        _configFilenames = configFilenames;
+        
+        if (variables) {
+            _variables = [variables mutableCopyWithZone:NULL];
+        } else {
+            _variables = [[NSMutableDictionary alloc] init];
+        }
+        
+        if (setOnlyNonDebugParams) {
+            _setOnlyNonDebugParams = true;
+        } else {
+            _setOnlyNonDebugParams = false;
+        }
         
         [self copyDataToDocumentsDirectory];
         _tesseract = new tesseract::TessBaseAPI();
@@ -48,8 +89,51 @@ namespace tesseract {
     return self;
 }
 
+- (id)initWithDataPath:(NSString *)dataPath language:(NSString *)language {
+    return [self initWithDataPath:dataPath
+                         language:language
+                    ocrEngineMode:OcrEngineModeDefault
+                  configFilenames:nil
+                        variables:nil
+            setOnlyNonDebugParams:NO];
+}
+
 - (BOOL)initEngine {
-    int returnCode = _tesseract->Init([_dataPath UTF8String], [_language UTF8String]);
+    char **configs = NULL;
+    int configs_size = 0;
+    GenericVector<STRING> keys;
+    GenericVector<STRING> values;
+    
+    if (_configFilenames && _configFilenames.count > 0) {
+        // completely untested
+        configs = (char**) malloc(_configFilenames.count * sizeof(char*));
+        for (; configs_size < _configFilenames.count; configs_size++) {
+            configs[configs_size] = (char*) malloc((((NSString*)(_configFilenames[configs_size])).length + 1) * sizeof(char));
+            strncpy(configs[configs_size], [_configFilenames[configs_size] UTF8String], ((NSString*)(_configFilenames[configs_size])).length + 1);
+        }
+    }
+    
+    for (NSString* key in _variables) {
+        keys.push_back([key UTF8String]);
+        values.push_back([_variables[key] UTF8String]);
+    }
+    
+    int returnCode = _tesseract->Init(_dataPath ? [_dataPath UTF8String] : NULL,
+                                      _language ? [_language UTF8String] : NULL,
+                                      _ocrEngineMode,
+                                      configs,
+                                      configs_size,
+                                      &keys,
+                                      &values,
+                                      _setOnlyNonDebugParams);
+    if (configs) {
+        // completely untested
+        for (int filenameIndex = 0; filenameIndex < configs_size; filenameIndex++) {
+            free(configs[filenameIndex]);
+        }
+        free(configs);
+    }
+    
     return (returnCode == 0) ? YES : NO;
 }
 
