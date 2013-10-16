@@ -105,7 +105,6 @@ namespace tesseract {
     GenericVector<STRING> values;
     
     if (_configFilenames && _configFilenames.count > 0) {
-        // completely untested
         configs = (char**) malloc(_configFilenames.count * sizeof(char*));
         for (; configs_size < _configFilenames.count; configs_size++) {
             configs[configs_size] = (char*) malloc((((NSString*)(_configFilenames[configs_size])).length + 1) * sizeof(char));
@@ -127,7 +126,6 @@ namespace tesseract {
                                       &values,
                                       _setOnlyNonDebugParams);
     if (configs) {
-        // completely untested
         for (int filenameIndex = 0; filenameIndex < configs_size; filenameIndex++) {
             free(configs[filenameIndex]);
         }
