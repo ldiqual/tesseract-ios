@@ -31,6 +31,7 @@ Usage
 Here is the default workflow to extract text from an image:
 
  - Instantiate Tesseract with data path and language
+ - Set the delegate (only needed for recognizing with progress update)
  - Set variables (character set, …)
  - Set the image to analyze
  - Start recognition
@@ -51,7 +52,29 @@ Code Sample
     NSLog(@"%@", [tesseract recognizedText]);
     [tesseract clear];
  
- 
+Code sample with progress update
+--------------------------------
+
+    #import "Tesseract.h"
+    
+    - (void) viewDidLoad {
+      Tesseract* tesseract = [[Tesseract alloc] initWithDataPath:@"tessdata" language:@"eng"];
+      [tesseract setTessDelegate:self];
+      [tesseract setVariableValue:@"0123456789" forKey:@"tessedit_char_whitelist"];
+      [tesseract setImage:[UIImage imageNamed:@"image_sample.jpg"]];
+      [tesseract recognizeWithProgressUpdate];
+    
+      NSLog(@"%@", [tesseract recognizedText]);
+      [tesseract clear];
+    }
+
+    /*
+     * this is delegate is getting called everytime the progress changes
+     */
+    - (void)progressUpdate:(NSUInteger)progress {
+      NSLog(@"progress: %d%%",progress);
+    }
+
 Method reference
 ----------------
 
@@ -93,6 +116,12 @@ Override the language defined with `-initWithDataPath:language:`.
 
 Start text recognition. You might want to launch this process in background with `NSObject`'s `-performSelectorInBackground:withObject:`. 
 
+### -recognizeWithProgressUpdate ###
+
+`- (BOOL)recognizeWithProgressUpdate`
+
+Start text recognition with progress update. Implement `- (void)progressUpdate:(NSUInteger)progress` delegate in order to show a progress bar or to log the progress.
+
 ### -recognizedText ###
 
 `- (NSString *)recognizedText`
@@ -104,3 +133,9 @@ Get the text extracted from the image.
 `- (void) clear`
 
 Clears Tesseract object after text has been recognized from image. Preventing memory leaks.
+
+### -progressUpdate ###
+
+`- (void)progressUpdate:(NSUInteger)progress`
+
+Function that will be called on progress update during recognizing. progress range is [0...100]

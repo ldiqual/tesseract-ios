@@ -14,10 +14,15 @@ extern NSString * const OcrEngineModeCubeOnly;
 extern NSString * const OcrEngineModeTesseractCubeCombined;
 extern NSString * const OcrEngineModeDefault;
 
+@protocol TesseractDelegate <NSObject>
+-(void) progressUpdate:(NSUInteger)progess;
+@end
+
 @interface Tesseract : NSObject {
     NSString* _dataPath;
     NSString* _language;
     NSMutableDictionary* _variables;
+    __unsafe_unretained id tessDelegate;
 }
 
 + (NSString *)version;
@@ -67,7 +72,11 @@ extern NSString * const OcrEngineModeDefault;
 - (void)setImage:(UIImage *)image;
 - (BOOL)setLanguage:(NSString *)language;
 - (BOOL)recognize;
+- (BOOL)recognizeWithProgressUpdate;
 - (NSString *)recognizedText;
 - (void)clear;
+
+@property (readonly)NSUInteger progress;
+@property (nonatomic, assign) id<TesseractDelegate> tessDelegate;
 
 @end

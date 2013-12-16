@@ -12,6 +12,7 @@
 #import "baseapi.h"
 #import "environ.h"
 #import "pix.h"
+#import "ocrclass.h"
 
 NSString * const OcrEngineModeTesseractOnly = @"OcrEngineModeTesseractOnly";
 NSString * const OcrEngineModeCubeOnly = @"OcrEngineModeCubeOnly";
@@ -34,6 +35,8 @@ namespace tesseract {
 @end
 
 @implementation Tesseract
+
+@synthesize tessDelegate;
 
 + (NSString *)version {
     return [NSString stringWithFormat:@"%s", tesseract::TessBaseAPI::Version()];
@@ -192,6 +195,34 @@ namespace tesseract {
     int returnCode = _tesseract->Recognize(NULL);
     return (returnCode == 0) ? YES : NO;
 }
+  
+- (BOOL)recognizeWithProgressUpdate {
+
+    _progress = 0;
+    ETEXT_DESC *monitor = new ETEXT_DESC;
+
+    void (^progressBlock)(void) = ^void {
+        if (monitor->progress > _progress) {
+            _progress = monitor->progress;
+            [self.tessDelegate progressUpdate:_progress];
+        }
+    };
+  
+    dispatch_queue_t backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t timer = createDispatchTimer(1, 0, backgroundQueue, progressBlock);
+  
+    int returnCode = _tesseract->Recognize(monitor);
+
+    if(_progress < 100) {
+        _progress = 100;
+        [self.tessDelegate progressUpdate:_progress];
+    }
+  
+    dispatch_release(timer);
+    delete monitor;
+  
+    return (returnCode == 0) ? YES : NO;
+}
 
 - (NSString *)recognizedText {
     char* utf8Text = _tesseract->GetUTF8Text();
@@ -236,6 +267,24 @@ namespace tesseract {
     CGColorSpaceRelease(colorSpace);
     
     _tesseract->SetImage((const unsigned char *) _pixels, width, height, sizeof(uint32_t), width * sizeof(uint32_t));
+}
+
+#pragma mark - progress update
+
+dispatch_source_t createDispatchTimer(uint64_t interval,
+                                      uint64_t leeway,
+                                      dispatch_queue_t queue,
+                                      dispatch_block_t block)
+{
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,
+                                                   0, 0, queue);
+    if (timer) {
+        dispatch_source_set_timer(timer, dispatch_walltime(NULL, 0), interval, leeway);
+        dispatch_source_set_event_handler(timer, block);
+        dispatch_resume(timer);
+    }
+  
+    return timer;
 }
 
 @end
