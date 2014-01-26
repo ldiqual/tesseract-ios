@@ -195,7 +195,9 @@ namespace tesseract {
 
 - (NSString *)recognizedText {
     char* utf8Text = _tesseract->GetUTF8Text();
-    return [NSString stringWithUTF8String:utf8Text];
+    NSString *text = [NSString stringWithUTF8String:utf8Text];
+    delete[] utf8Text;
+    return text;
 }
 
 - (void)clear
@@ -203,6 +205,7 @@ namespace tesseract {
     free(_pixels);
     _tesseract->Clear();
     _tesseract->End();
+    delete _tesseract;
 }
 
 - (void)setImage:(UIImage *)image
