@@ -20,9 +20,20 @@ Requirements
 Installation
 ------------
 
- - Download [tesseract-ios-lib](https://github.com/ldiqual/tesseract-ios-lib) and put it somewhere in your project.
- - Put the `Classes` content (from this repo) somewhere in your project.
- - Go to your project settings, and ensure that `C++ Standard Library => Compiler Default`.
+ - Download [tesseract-ios-lib](https://github.com/ldiqual/tesseract-ios-lib) and [tesseract-ios](https://github.com/ldiqual/tesseract-ios) and put them in your project folder.
+ - Download an appropriate tesseract language trained data from the following website: https://code.google.com/p/tesseract-ocr/downloads/list and put it in your project folder
+ - You should have the following folder structure:
+
+![](https://s3.amazonaws.com/uploads.hipchat.com/13599/245679/DvgHe7KJhE0QK7Q/upload.png)
+
+ - Add `tesseract-ios` and `tesseract-ios-lib` as groups to your project
+ - Add `tessdata` by reference to your project
+
+![](https://s3.amazonaws.com/uploads.hipchat.com/13599/245679/ZqMcF166v4W6iCu/upload.png)
+
+ - Go to your project settings, and ensure that `C++ Standard Library => libstdc++`:
+
+![](https://s3.amazonaws.com/uploads.hipchat.com/13599/245679/VcVVNpRYeOiGy7r/upload.png)
  
 
 Usage
