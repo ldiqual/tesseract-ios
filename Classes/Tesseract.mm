@@ -83,7 +83,7 @@ namespace tesseract {
         
         BOOL success = [self initEngine];
         if (!success) {
-            return NO;
+            return nil;
         }
     }
     return self;
