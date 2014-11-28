@@ -1,6 +1,7 @@
 Tesseract for iOS
 =================
 
+### tesseract-ios is not actively maintained anymore. I encourage you to use gali8's [Tesseract-OCR-iOS](https://github.com/gali8/Tesseract-OCR-iOS) instead.
 
 About
 -----
