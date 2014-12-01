@@ -104,6 +104,13 @@ Override the language defined with `-initWithDataPath:language:`.
 
 Start text recognition. You might want to launch this process in background with `NSObject`'s `-performSelectorInBackground:withObject:`. 
 
+### -recognizeAsyncWithCompletionBlock:completionBlock ###
+
+`- (void)recognizeAsyncWithCompletionBlock:(void (^)(BOOL result))completionBlock`
+
+Start text recognition in background with execution of `completionBlock` when recognition finished.
+
+
 ### -recognizedText ###
 
 `- (NSString *)recognizedText`

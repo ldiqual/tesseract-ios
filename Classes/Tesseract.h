@@ -66,6 +66,7 @@ extern NSString * const OcrEngineModeDefault;
 - (void)setVariableValue:(NSString *)value forKey:(NSString *)key;
 - (void)setImage:(UIImage *)image;
 - (BOOL)setLanguage:(NSString *)language;
+- (void)recognizeAsyncWithCompletionBlock:(void (^)(BOOL result))completionBlock;
 - (BOOL)recognize;
 - (NSString *)recognizedText;
 - (void)clear;

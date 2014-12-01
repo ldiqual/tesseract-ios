@@ -188,6 +188,14 @@ namespace tesseract {
     return YES;
 }
 
+- (void)recognizeAsyncWithCompletionBlock:(void (^)(BOOL result))completionBlock
+{
+    dispatch_queue_t queue = dispatch_queue_create("tesseract_recognizing_queue", NULL);
+    dispatch_async(queue, ^{
+        completionBlock([self recognize]);
+    });
+}
+
 - (BOOL)recognize {
     int returnCode = _tesseract->Recognize(NULL);
     return (returnCode == 0) ? YES : NO;
